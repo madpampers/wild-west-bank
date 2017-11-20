@@ -91,10 +91,5 @@ public class ClientService {
             throw new IllegalArgumentException("An error occurred during creating client! " +
                     "Check age field.");
         }
-
-        if (!client.getName().matches("/^[a-zA-Z\\s]*$/")) {
-            throw new IllegalArgumentException("An error occurred during creating client! " +
-                    "Name can contain only letters and spaces.");
-        }
     }
 }
