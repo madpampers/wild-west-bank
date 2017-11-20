@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Clients</title>
+    <th:block th:include="layout/header"></th:block>
+</head>
+<body>
+<div class="container">
+    <div>
+        <a th:href="${'/transactions/transfer/'}" class="btn btn-default">New Transaction</a>
+    </div>
+    <div th:if="${not #lists.isEmpty(transactions)}">
+        <h2>All Transactions:</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Id</th>
+                <th>Amount</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Timestamp</th>
+            </tr>
+            <tr th:each="transaction : ${transactions}">
+                <td th:text="${transaction.id}">Id</td>
+                <td th:text="${transaction.amount}">Amount</td>
+                <td th:text="${transaction.fromAccount}">From</td>
+                <td th:text="${transaction.toAccount}">To</td>
+                <td th:text="${#dates.format(transaction.timestamp, 'dd.MM.yyyy HH:mm:ss')}">Timestamp</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

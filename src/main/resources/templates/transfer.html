@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Edit Client Details</title>
+    <th:block th:include="layout/header"></th:block>
+</head>
+<body>
+<div class="container">
+    <h2>Transaction details:</h2>
+    <div>
+        <form class="form-horizontal" th:object="${transfer}" th:action="@{/transactions/process}" method="post">
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <input type="hidden" class="form-control" th:field="*{id}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">From Account:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{fromAccount}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">To Account:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{toAccount}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Amount:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{amount}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <input type="hidden" class="form-control" th:field="*{dateAndTime}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary">Accept</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

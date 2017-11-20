@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Client Info</title>
+    <th:block th:include="layout/header"></th:block>
+</head>
+<body>
+<div class="container">
+    <h2>Account Info:</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Id</th>
+            <td th:text="${account.id}">id</td>
+        </tr>
+        <tr>
+            <th>Holder</th>
+            <td th:text="${account.client.name}">Holder name</td>
+        </tr>
+        <tr>
+            <th>Holder Id</th>
+            <td th:text="${account.client.Id}">Holder Id</td>
+        </tr>
+        <tr>
+            <th>Created</th>
+            <td th:text="${#dates.format(account.createDate, 'dd-MMM-yyyy')}">Create date</td>
+        </tr>
+        <tr>
+            <th>Balance</th>
+            <td th:text="${account.balance}">Balance</td>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <td th:text="${account.type}">id</td>
+        </tr>
+    </table>
+    <div>
+        <a th:href="${'/transactions/deposit/' + account.id}" class="btn btn-default">Deposit</a>
+        <a th:href="${'/transactions/withdraw/' + account.id}" class="btn btn-default">Withdraw</a>
+    </div>
+    <div th:if="${not #lists.isEmpty(incomes)}">
+        <h2>Incomes:</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Date</th>
+                <th>From</th>
+                <th>Income</th>
+            </tr>
+            <tr th:each="transaction : ${incomes}">
+                <td th:text="${{transaction.timestamp}}">Timestamp</td>
+                <td th:text="${transaction.fromAccount}">Source</td>
+                <td th:text="${transaction.amount}">Income</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="container">
+    <div th:if="${not #lists.isEmpty(outcomes)}">
+        <h2>Outcomes:</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Date</th>
+                <th>From</th>
+                <th>Outcome</th>
+            </tr>
+            <tr th:each="transaction : ${outcomes}">
+                <td th:text="${{transaction.timestamp}}">Timestamp</td>
+                <td th:text="${transaction.ToAccount}">Source</td>
+                <td th:text="${transaction.amount}">Outcome</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
