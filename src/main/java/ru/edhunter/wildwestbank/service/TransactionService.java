@@ -49,7 +49,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public synchronized void processTransaction(Transaction transaction) {
+    public void processTransaction(Transaction transaction) {
         LOG.info("Processing transaction");
 
         if (!transaction.getFromAccount().equals("CASH")) {
