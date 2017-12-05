@@ -33,26 +33,16 @@
 //    @Autowired
 //    public void setAccountRepository(AccountRepository accountRepository) {
 //        this.accountRepository = accountRepository;
+//
 //    }
 //
 //    @Override
 //    public void run(String... strings) throws Exception {
 //        createClients();
-//        createAccounts();
-//        createTransactions();
 //    }
 //
 //    private void createTransactions() {
 //
-//    }
-//
-//    private void createAccounts() {
-//        Account account = new Account();
-//        account.setCreateDate(new Date().toString());
-//        account.setBalance(300d);
-//        account.setClient(clientRepository.findByName("Django"));
-//        account.setType("USD");
-//        accountRepository.save(account);
 //    }
 //
 //    private void createClients() {

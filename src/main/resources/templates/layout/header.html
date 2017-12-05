@@ -6,8 +6,9 @@
           href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
           rel="stylesheet" media="screen"/>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
-    <script src="/webjars/jquery/3.2.1/jquery.min.js"></script>
-    <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+    <script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/js.js}"></script>
 </head>
 <body>
 <div class="container">
@@ -15,10 +16,10 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#" th:href="@{/}">Home</a>
+                    <a id="home" class="navbar-brand" href="#" th:href="@{/}">Home</a>
                     <ul class="nav navbar-nav">
-                        <li><a th:href="@{/clients}">Clients</a></li>
-                        <li><a th:href="@{/transactions}">Transactions</a></li>
+                        <li><a id="clients" th:href="@{/clients}">Clients</a></li>
+                        <li><a id="transactions" th:href="@{/transactions}">Transactions</a></li>
                     </ul>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.edhunter.wildwestbank.model.Account;
 import ru.edhunter.wildwestbank.model.Client;
 import ru.edhunter.wildwestbank.repository.AccountRepository;
+import ru.edhunter.wildwestbank.repository.ClientRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -15,12 +16,18 @@ import java.util.List;
 public class AccountService {
 
     private AccountRepository accountRepository;
+    private ClientRepository clientRepository;
 
     private Logger LOG = LoggerFactory.getLogger(AccountService.class);
 
     @Autowired
     public void setAccountRepository(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
+    }
+
+    @Autowired
+    public void setClientRepository(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     public List<Account> getListOfAccountsByClientId(String id) {
@@ -35,13 +42,19 @@ public class AccountService {
         return accountRepository.findOne(id);
     }
 
-    public void saveAccount(Account account) {
+    public Account saveAccount(String accountType, Double balance, String clientId) {
         try {
             LOG.info("Saving account...");
-            accountRepository.save(account);
+            Account account = new Account();
+            account.setClient(clientRepository.getOne(clientId));
+            account.setCreateDate(new Date());
+            account.setBalance(balance);
+            account.setType(accountType);
+            return accountRepository.save(account);
         } catch (Exception e) {
             LOG.error("An error occurred during account saving: " + e.getMessage());
         }
+        return new Account();
     }
 
     public void deleteAccount(String id) {

@@ -3,9 +3,7 @@ package ru.edhunter.wildwestbank.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ru.edhunter.wildwestbank.model.*;
 import ru.edhunter.wildwestbank.service.AccountService;
 import ru.edhunter.wildwestbank.service.ClientService;
@@ -44,15 +42,11 @@ public class MainController {
         return "clients";
     }
 
-    @RequestMapping(path = "/clients/add", method = RequestMethod.GET)
-    public String createClient(Model model) {
-        model.addAttribute("client", new Client());
-        return "add";
-    }
-
-    @RequestMapping(path = "/clients/add", method = RequestMethod.POST)
-    public String saveClient(Client client) {
-        return "redirect:/clients/" + clientService.saveClientAndReturnId(client);
+    @RequestMapping(path = "/clients/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Client saveClient(@RequestBody Client client) {
+        if (client.getId() == null) return clientService.saveClientNewClient(client);
+        return clientService.updateClient(client);
     }
 
     @RequestMapping(path = "/clients/{clientId}", method = RequestMethod.GET)
@@ -62,45 +56,30 @@ public class MainController {
         return "info";
     }
 
-    @RequestMapping(path = "/clients/{clientId}/delete", method = RequestMethod.GET)
-    public String deleteClient(@PathVariable(value = "clientId") String id) {
+    @RequestMapping(value = "/clients/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteClient(@RequestParam("id") String id) {
         clientService.deleteClient(id);
-        return "redirect:/clients";
+        return id;
     }
 
-    @RequestMapping(path = "/clients/{clientId}/edit", method = RequestMethod.GET)
-    public String editClient(Model model, @PathVariable(value = "clientId") String id) {
-        model.addAttribute("client", clientService.getClient(id));
-        return "edit";
+    @RequestMapping(path = "/account/create", method = RequestMethod.POST)
+    @ResponseBody
+    public String saveAccount(@RequestParam("type") String type,
+                              @RequestParam("balance") Double balance,
+                              @RequestParam("client") String clientName) {
+        accountService.saveAccount(type, balance, clientName);
+        return clientName;
     }
 
-    @RequestMapping(path = "/clients/{clientId}/edit", method = RequestMethod.POST)
-    public String editClient(Client client, @PathVariable(value = "clientId") String id) {
-        clientService.updateClient(client, id);
-        return "redirect:/clients/" + id;
+    @RequestMapping(path = "/account/close", method = RequestMethod.POST)
+    @ResponseBody
+    public String closeAccount(@RequestParam(value = "id") String id) {
+        accountService.deleteAccount(id);
+        return id;
     }
 
-    @RequestMapping(path = "/clients/{clientId}/newaccount", method = RequestMethod.GET)
-    public String createAccount(Model model, @PathVariable(value = "clientId") String id) {
-        model.addAttribute("account", accountService.getBlankAccountWithCreateDate(clientService.getClient(id)));
-        model.addAttribute("id", id);
-        return "newaccount";
-    }
-
-    @RequestMapping(path = "/clients/{clientId}/newaccount", method = RequestMethod.POST)
-    public String saveAccount(Account account, @PathVariable(value = "clientId") String id) {
-        accountService.saveAccount(account);
-        return "redirect:/clients/" + id;
-    }
-
-    @RequestMapping(path = "/clients/{clientId}/{accountId}/close", method = RequestMethod.GET)
-    public String closeAccount(@PathVariable(value = "clientId") String clientId,
-                               @PathVariable(value = "accountId") String accountId) {
-        accountService.deleteAccount(accountId);
-        return "redirect:/clients/" + clientId;
-    }
-
-    @RequestMapping(path = "/clients/{clientId}/{accountId}/details", method = RequestMethod.GET)
+    @RequestMapping(path = "/account/{accountId}", method = RequestMethod.GET)
     public String getAccountDetails(Model model, @PathVariable(value = "accountId") String accountId) {
         model.addAttribute("account", accountService.getAccountById(accountId));
         model.addAttribute("incomes", transactionService.getIncomeTransactions(accountId));
@@ -114,27 +93,9 @@ public class MainController {
         return "transactions";
     }
 
-    @RequestMapping(path = "/transactions/transfer/", method = RequestMethod.GET)
-    public String newTransaction(Model model) {
-        model.addAttribute("transfer", transactionService.getBlankTransactionWithTimestamp());
-        return "transfer";
-    }
-
     @RequestMapping(path = "/transactions/process", method = RequestMethod.POST)
-    public String processTransaction(Transaction transaction) {
-        transactionService.processTransaction(transaction);
-        return "redirect:/transactions";
-    }
-
-    @RequestMapping(path = "/transactions/deposit/{id}", method = RequestMethod.GET)
-    public String accountDeposit(Model model, @PathVariable(value = "id") String id) {
-        model.addAttribute("deposit", transactionService.getDepositTransactionWithTimestamp(id));
-        return "deposit";
-    }
-
-    @RequestMapping(path = "/transactions/withdraw/{id}", method = RequestMethod.GET)
-    public String accountWithdraw(Model model, @PathVariable(value = "id") String id) {
-        model.addAttribute("withdraw", transactionService.getWithdrawTransactionWithTimestamp(id));
-        return "withdraw";
+    @ResponseBody
+    public Transaction processTransaction(@RequestBody Transaction transaction) {
+        return transactionService.processTransaction(transaction);
     }
 }

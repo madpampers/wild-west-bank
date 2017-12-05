@@ -5,47 +5,82 @@
     <th:block th:include="layout/header"></th:block>
 </head>
 <body>
-<div class="container">
+<div class="container" id="content">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.2.1/moment.min.js"></script>
     <h2>Account Info:</h2>
-    <table class="table table-striped">
+    <table class="table table-striped" id="accountinfo">
         <tr>
             <th>Id</th>
-            <td th:text="${account.id}">id</td>
+            <td th:text="${account.id}" id="accountid">id</td>
         </tr>
         <tr>
             <th>Holder</th>
-            <td th:text="${account.client.name}">Holder name</td>
+            <td th:text="${account.client.name}" id="holdername">Holder name</td>
         </tr>
         <tr>
             <th>Holder Id</th>
-            <td th:text="${account.client.Id}">Holder Id</td>
+            <td th:text="${account.client.Id}" id="holderid">Holder Id</td>
         </tr>
         <tr>
             <th>Created</th>
-            <td th:text="${#dates.format(account.createDate, 'dd-MMM-yyyy')}">Create date</td>
+            <td th:text="${#dates.format(account.createDate, 'dd-MM-yyyy')}" id="createdate">Create date</td>
         </tr>
         <tr>
             <th>Balance</th>
-            <td th:text="${account.balance}">Balance</td>
+            <td th:text="${account.balance}" id="balance">Balance</td>
         </tr>
         <tr>
             <th>Type</th>
-            <td th:text="${account.type}">id</td>
+            <td th:text="${account.type}" id="type">id</td>
         </tr>
     </table>
     <div>
-        <a th:href="${'/transactions/deposit/' + account.id}" class="btn btn-default">Deposit</a>
-        <a th:href="${'/transactions/withdraw/' + account.id}" class="btn btn-default">Withdraw</a>
+        <div class="container">
+            <h2>Deposit details:</h2>
+            <div>
+                <form class="form-horizontal" method="post" id="deposit">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Amount:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="toDeposit"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary">Accept</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="container">
+            <h2>Withdraw details:</h2>
+            <div>
+                <form class="form-horizontal" method="post" id="withdraw">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Amount:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="toWithdraw"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary">Accept</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div th:if="${not #lists.isEmpty(incomes)}">
+    <div>
         <h2>Incomes:</h2>
-        <table class="table table-striped">
-            <tr>
+        <table class="table table-striped" id="incomes">
+            <tr id="headerRawDeposit">
                 <th>Date</th>
                 <th>From</th>
                 <th>Income</th>
             </tr>
-            <tr th:each="transaction : ${incomes}">
+            <tr th:if="${not #lists.isEmpty(incomes)}" th:each="transaction : ${incomes}">
                 <td th:text="${{transaction.timestamp}}">Timestamp</td>
                 <td th:text="${transaction.fromAccount}">Source</td>
                 <td th:text="${transaction.amount}">Income</td>
@@ -54,15 +89,15 @@
     </div>
 </div>
 <div class="container">
-    <div th:if="${not #lists.isEmpty(outcomes)}">
+    <div>
         <h2>Outcomes:</h2>
-        <table class="table table-striped">
-            <tr>
+        <table class="table table-striped" id="outcomes">
+            <tr id="headerRawWithdraw">
                 <th>Date</th>
                 <th>From</th>
                 <th>Outcome</th>
             </tr>
-            <tr th:each="transaction : ${outcomes}">
+            <tr th:if="${not #lists.isEmpty(outcomes)}" th:each="transaction : ${outcomes}">
                 <td th:text="${{transaction.timestamp}}">Timestamp</td>
                 <td th:text="${transaction.ToAccount}">Source</td>
                 <td th:text="${transaction.amount}">Outcome</td>

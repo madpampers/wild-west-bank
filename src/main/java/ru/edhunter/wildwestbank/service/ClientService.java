@@ -24,7 +24,7 @@ public class ClientService {
     public List<Client> getListOfAllClients() {
         LOG.info("Getting all clients...");
 
-        return clientRepository.findAll();
+        return clientRepository.getAllByOrderByNameDesc();
     }
 
     public Client getClient(String id) {
@@ -43,39 +43,40 @@ public class ClientService {
         }
     }
 
-    public String saveClientAndReturnId(Client client) {
+    public Client saveClientNewClient(Client client) {
         LOG.info("Saving client...");
 
         checkForValidFields(client);
 
         try {
-            return clientRepository.save(client).getId();
+            return clientRepository.save(client);
         } catch (Exception e) {
             LOG.error("An error occurred during saving client" + e.getMessage());
         }
 
-        return client.getId();
+        return client;
     }
 
-    public void updateClient(Client clientToUpdate, String id) {
+    public Client updateClient(Client clientToUpdate) {
         LOG.info("Updating client...");
 
         checkForValidFields(clientToUpdate);
 
-        Client foundClient = clientRepository.findOne(id);
+        Client foundClient = clientRepository.findOne(clientToUpdate.getId());
 
         if (foundClient != null) {
             foundClient.setName(clientToUpdate.getName());
             foundClient.setAge(clientToUpdate.getAge());
             foundClient.setAddress(clientToUpdate.getAddress());
             try {
-                clientRepository.save(foundClient);
+                return clientRepository.save(foundClient);
             } catch (Exception e) {
                 LOG.info("An error occurred during saving client" + e.getMessage());
             }
         } else {
             throw new NullPointerException("Not found client to update, id = " + clientToUpdate.getId());
         }
+        return clientToUpdate;
     }
 
     private void checkForValidFields(Client client) {
