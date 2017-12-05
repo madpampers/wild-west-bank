@@ -49,8 +49,10 @@ public class TransactionService {
     }
 
     @Transactional
-    public void processTransaction(Transaction transaction) {
+    public Transaction processTransaction(Transaction transaction) {
         LOG.info("Processing transaction");
+
+        transaction.setTimestamp(new Date());
 
         if (!transaction.getFromAccount().equals("CASH")) {
             accountService.withdrawFromAccount(transaction.getFromAccount(), transaction.getAmount());
@@ -60,7 +62,7 @@ public class TransactionService {
             accountService.depositToAccount(transaction.getToAccount(), transaction.getAmount());
         }
 
-        transactionRepository.save(transaction);
+        return transactionRepository.save(transaction);
     }
 
     public Transaction getBlankTransactionWithTimestamp() {

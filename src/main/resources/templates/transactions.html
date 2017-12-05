@@ -5,21 +5,59 @@
     <th:block th:include="layout/header"></th:block>
 </head>
 <body>
-<div class="container">
+<div class="container" id="content">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.2.1/moment.min.js"></script>
     <div>
-        <a th:href="${'/transactions/transfer/'}" class="btn btn-default">New Transaction</a>
+        <h2>Transaction details:</h2>
+        <div>
+            <form class="form-horizontal" id="transfer" method="post">
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <input type="hidden" class="form-control" value=""/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">From Account:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="fromAccount"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">To Account:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="toAccount"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Amount:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="amount"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <input type="hidden" class="form-control" id="timestamp"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-primary" id="acceptTransaction">Accept</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-    <div th:if="${not #lists.isEmpty(transactions)}">
+    <div>
         <h2>All Transactions:</h2>
-        <table class="table table-striped">
-            <tr>
+        <table class="table table-striped" id="transactions">
+            <tr id="transactionsHeaderRow">
                 <th>Id</th>
                 <th>Amount</th>
                 <th>From</th>
                 <th>To</th>
                 <th>Timestamp</th>
             </tr>
-            <tr th:each="transaction : ${transactions}">
+            <tr th:if="${not #lists.isEmpty(transactions)}" th:each="transaction : ${transactions}">
                 <td th:text="${transaction.id}">Id</td>
                 <td th:text="${transaction.amount}">Amount</td>
                 <td th:text="${transaction.fromAccount}">From</td>
